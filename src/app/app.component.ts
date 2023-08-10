@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import * as Highcharts from 'highcharts';
 import GanttModule from 'highcharts/modules/gantt';
-
+import 'zone.js';
+import 'zone.js/dist/long-stack-trace-zone.js';
 GanttModule(Highcharts);
 
 @Component({
@@ -177,7 +178,7 @@ export class AppComponent implements OnInit {
         type: 'scatter',
         marker: {
           symbol:
-            'url(https://github.com/dsmriti/gantt/blob/master/src/assets/testing.png)',
+            'url(https://raw.githubusercontent.com/dsmriti/gantt/master/src/assets/testing.png)',
         },
         data: [
           {
@@ -191,7 +192,7 @@ export class AppComponent implements OnInit {
         type: 'scatter',
         marker: {
           symbol:
-            'url(https://github.com/dsmriti/gantt/blob/master/src/assets/search.png)',
+            'url(https://raw.githubusercontent.com/dsmriti/gantt/master/src/assets/search.png)',
         },
         data: [
           {
@@ -205,7 +206,7 @@ export class AppComponent implements OnInit {
         type: 'scatter',
         marker: {
           symbol:
-            'url(https://github.com/dsmriti/gantt/blob/master/src/assets/truck.png)',
+            'url(https://raw.githubusercontent.com/dsmriti/gantt/master/src/assets/truck.png)',
         },
         data: [
           {
@@ -219,7 +220,7 @@ export class AppComponent implements OnInit {
         type: 'scatter',
         marker: {
           symbol:
-            'url(https://github.com/dsmriti/gantt/blob/master/src/assets/warehouse.png)',
+            'url(https://raw.githubusercontent.com/dsmriti/gantt/master/src/assets/warehouse.png)',
         },
         data: [
           {
@@ -233,7 +234,7 @@ export class AppComponent implements OnInit {
         type: 'scatter',
         marker: {
           symbol:
-            'url(https://github.com/dsmriti/gantt/blob/master/src/assets/testing.png)',
+            'url(https://raw.githubusercontent.com/dsmriti/gantt/master/src/assets/testing.png)',
         },
         data: [
           {
@@ -247,7 +248,7 @@ export class AppComponent implements OnInit {
         type: 'scatter',
         marker: {
           symbol:
-            'url(https://github.com/dsmriti/gantt/blob/master/src/assets/search.png)',
+            'url(https://raw.githubusercontent.com/dsmriti/gantt/master/src/assets/search.png)',
         },
         data: [
           {
@@ -261,7 +262,7 @@ export class AppComponent implements OnInit {
         type: 'scatter',
         marker: {
           symbol:
-            'url(https://github.com/dsmriti/gantt/blob/master/src/assets/truck.png)',
+            'url(https://raw.githubusercontent.com/dsmriti/gantt/master/src/assets/truck.png)',
         },
         data: [
           {
@@ -275,7 +276,7 @@ export class AppComponent implements OnInit {
         type: 'scatter',
         marker: {
           symbol:
-            'url(https://github.com/dsmriti/gantt/blob/master/src/assets/warehouse.png)',
+            'url(https://raw.githubusercontent.com/dsmriti/gantt/master/src/assets/warehouse.png)',
         },
         data: [
           {
