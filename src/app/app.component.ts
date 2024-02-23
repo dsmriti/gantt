@@ -1,283 +1,172 @@
 import { Component, OnInit } from '@angular/core';
 import * as Highcharts from 'highcharts';
 import GanttModule from 'highcharts/modules/gantt';
-
 GanttModule(Highcharts);
+import {
+  ganttSeriesMock,
+  scatterSeriesMock,
+} from 'src/mock-data/gantt-chart.data';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
   Highcharts: typeof Highcharts = Highcharts; // required
   chartConstructor = 'ganttChart';
-  chartOptions: Highcharts.Options = {
+  seriesData: Highcharts.SeriesOptionsType[] = []; // array for combined gantt and scatter data of chart series
+  plotBreaks: any[] = []; // array to plot breaks for dynamic column width of x-axis
+  ganttPlotData: any[] = [];
+  scatterPlotData: any[] = [];
+  plotBreakSize = 4.5;
+
+  public chartOptions: Highcharts.Options = {
     chart: {
+      type: 'Gantt',
       scrollablePlotArea: {
-        minWidth: 40 * 48, // 48 weeks, 40px each
-        scrollPositionX: 0 // Start at beginning
+        minWidth: 55 * 52, // 52 weeks, 55px each
+        scrollPositionX: 0,
       },
-      height: '275'
+    },
+    legend: {
+      enabled: false,
+    },
+    title: {
+      text: '',
     },
     credits: {
-      enabled: false
+      enabled: false,
     },
     plotOptions: {
       gantt: {
-        pointWidth: 50
+        pointWidth: 55,
+        stickyTracking: false,
+        enableMouseTracking: false,
       },
       series: {
         states: {
           hover: {
-            enabled: true // Enable hover state
+            enabled: true, // Enable hover state
           },
           inactive: {
-            opacity: 1 // Ensures that all data points remain fully visible even if one is hovered over
-          }
-        }
-      }
+            opacity: 1, // Ensures that all data points remain fully visible even if one is hovered over
+          },
+        },
+      },
     },
-    /** MONTH WISE x-Axis*/
-    // xAxis: [{
-    //   labels: {
-    //     format: '{value:%W}',
-    //     style: {
-    //           color: '#454343',        // Text color of the label
-    //           backgroundColor: '#FBFBFB' // Background color of the label
-    //       }
-    //   },
-    //   grid: {
-    //     enabled: true,
-    //     borderColor: '#e2e5eb',
-    //     cellHeight: 32
-    //   },
-    // lineColor: '#FBFBFB',
-    // tickInterval: 7 * 24 * 3600 * 1000,
-    // min: Date.UTC(2023, 0, 1),
-    // max: Date.UTC(2023, 11, 31),
-    // minorGridLineWidth: 1,
-    // gridLineWidth: 1,
-    // plotLines: [{
-    //   color: '#FFCECE',
-    //   width: 35,
-    //   value: Date.UTC(2023, 6, 7),
-    //   label: {
-    //     text: 'Safety Stock Date',
-    //     rotation: 270,
-    //     y: 15,
-    //     textAlign: 'right'
-    // }
-    // }],
-    // plotBands: [
-    //   {
-    //     color: '#EEF5FF', // choose a color for the highlight
-    //     from: this.getCurrentWeekRange().start,
-    //     to: this.getCurrentWeekRange().end,
-    //     zIndex: 0
-    //   }
-    // ]
-    // }],
-    // week wise x-Axis
+    tooltip: {
+      enabled: true,
+      formatter: function () {
+        return 'Date: ' + new Date(this.x?.valueOf() || '').toDateString();
+      },
+    },
     xAxis: [
       {
+        type: 'datetime',
+        dateTimeLabelFormats: {
+          week: '%e%b', // format to show the first date & its month on graph
+        },
         labels: {
-          format: '{value:%W}',
           style: {
             color: '#454343', // Text color of the label
-            backgroundColor: '#FBFBFB' // Background color of the label
-          }
+            backgroundColor: '#fbfbfb', // Background color of the label
+          },
         },
         grid: {
           enabled: true,
           borderColor: '#e2e5eb',
-          cellHeight: 32
+          cellHeight: 32,
         },
-        lineColor: '#FBFBFB',
-        tickInterval: 7 * 24 * 3600 * 1000,
-        //tickInterval: 7 * 24 * 36e5, // one week
+        lineColor: '#fbfbfb',
+        /**
+         * tickInterval indicates as follows:
+          7: Number of days.
+          24: Hours in a day.
+          3600: Seconds in an hour.
+          1000: Milliseconds in a second.
+         */
+        tickInterval: 7 * 24 * 3600 * 1000, // to display weeks as the main intervals on a timeline
+        minorGridLineWidth: 1,
+        gridLineWidth: 1,
         min: Date.UTC(2023, 0, 1),
         max: Date.UTC(2023, 11, 31),
-        minorGridLineWidth: 12,
-        gridLineWidth: 1,
-        plotLines: [
-          {
-            color: '#FFCECE',
-            width: 35,
-            value: Date.UTC(2023, 8, 26),
-            label: {
-              text: 'Stock Limit',
-              rotation: 270,
-              y: 15,
-              textAlign: 'right'
-            }
-          }
-        ]
-      }
+      },
     ],
     yAxis: {
-      categories: ['Category 1', 'Category 2', 'Category 3'],
+      categories: [],
+      staticScale: 65.5, // sets the row height of y-axis
       grid: {
-        enabled: false
+        enabled: false,
       },
       labels: {
-        enabled: false // This will hide the y-axis labels
+        enabled: false, // This will hide the y-axis labels
       },
       title: {
-        text: null // This will hide the y-axis title
+        text: null, // This will hide the y-axis title
       },
-      plotLines: [
-        {
-          width: 20
-        }
-      ]
     },
-    tooltip: {
-      enabled: true
-    },
-    series: [
-      {
-        name: 'Category 1',
-        type: 'gantt',
-        data: [
-          {
-            start: Date.UTC(2023, 1, 2),
-            end: Date.UTC(2023, 5, 22),
-            color: '#f4f5f7',
-            y: 0
-          }
-        ]
-      },
-      {
-        name: 'Category 2',
-        type: 'gantt',
-        data: [
-          {
-            start: Date.UTC(2023, 6, 2),
-            end: Date.UTC(2023, 8, 22),
-            color: '#f4f5f7',
-            y: 1
-          }
-        ]
-      },
-      {
-        name: 'Category 3',
-        type: 'gantt',
-        data: [
-          {
-            start: Date.UTC(2023, 8, 1),
-            end: Date.UTC(2023, 11, 22),
-            color: '#f4f5f7',
-            y: 2
-          }
-        ]
-      },
-      {
-        name: 'Assignee 1',
-        type: 'scatter',
-        marker: {
-          symbol: 'url(./assets/testing.png)'
-        },
-        data: [
-          {
-            x: Date.UTC(2023, 2, 6),
-            y: 0
-          }
-        ]
-      },
-      {
-        name: 'Assignee 2',
-        type: 'scatter',
-        marker: {
-          symbol: 'url(./assets/search.png)'
-        },
-        data: [
-          {
-            x: Date.UTC(2023, 2, 9),
-            y: 0
-          }
-        ]
-      },
-      {
-        name: 'Assignee 3',
-        type: 'scatter',
-        marker: {
-          symbol: 'url(./assets/truck.png)'
-        },
-        data: [
-          {
-            x: Date.UTC(2023, 4, 7),
-            y: 0
-          }
-        ]
-      },
-      {
-        name: 'Assignee 4',
-        type: 'scatter',
-        marker: {
-          symbol: 'url(./assets/warehouse.png)'
-        },
-        data: [
-          {
-            x: Date.UTC(2023, 5, 7),
-            y: 0
-          }
-        ]
-      },
-      {
-        name: 'Assignee 5',
-        type: 'scatter',
-        marker: {
-          symbol: 'url(./assets/testing.png)'
-        },
-        data: [
-          {
-            x: Date.UTC(2023, 8, 14),
-            y: 1
-          }
-        ]
-      },
-      {
-        name: 'Assignee 6',
-        type: 'scatter',
-        marker: {
-          symbol: 'url(./assets/search.png)'
-        },
-        data: [
-          {
-            x: Date.UTC(2023, 8, 17),
-            y: 2
-          }
-        ]
-      },
-      {
-        name: 'Assignee 7',
-        type: 'scatter',
-        marker: {
-          symbol: 'url(./assets/truck.png)'
-        },
-        data: [
-          {
-            x: Date.UTC(2023, 9, 17),
-            y: 2
-          }
-        ]
-      },
-      {
-        name: 'Assignee 8',
-        type: 'scatter',
-        marker: {
-          symbol: 'url(./assets/warehouse.png)'
-        },
-        data: [
-          {
-            x: Date.UTC(2023, 10, 16),
-            y: 2
-          }
-        ]
-      }
-    ]
+    series: this.seriesData,
   };
 
-  ngOnInit(): void {}
+  public formSeries() {
+    let ganttData = ganttSeriesMock;
+    let scatterData = scatterSeriesMock;
+    let datemapping: any = {};
+    let filteredScatterData: any[] = [];
+
+    // for every date create a event count data for each row.
+    // the event count data is in format { date: { row_index: count } }
+    scatterData.forEach((element) => {
+      let y = element.data[0].y;
+      let x = element.data[0].x;
+
+      // checks if datemapp doesn't contain y, then create y
+      if (!datemapping[y]) {
+        datemapping[y] = new Map();
+      }
+      /**checks if any date exist then increase count for hasmap
+      the hasmap key has record of number of date occurence of single date. **/
+      if (datemapping[y].has(x)) {
+        datemapping[y].set(x, datemapping[y].get(x) + 1);
+      } else {
+        datemapping[y].set(x, 1);
+      }
+
+      element.data[0].x = new Date(
+        new Date(x).setMinutes(datemapping[y].get(x) * 350) //it adds 350 minute to this
+      ).getTime();
+
+      filteredScatterData.push(element);
+
+      this.plotBreaks.push({
+        from: element.data[0].x,
+        to: element.data[0].x,
+        breakSize: 24 * 3600 * 1000 * this.plotBreakSize,
+      });
+    });
+    this.seriesData = [...ganttData, ...filteredScatterData];
+    return this.seriesData;
+  }
+
+  public formChartOptions() {
+    let updatedChartAxis: any = this.chartOptions.xAxis;
+    updatedChartAxis[0].breaks = this.plotBreaks;
+    this.chartOptions = {
+      ...this.chartOptions,
+      series: this.seriesData,
+      xAxis: updatedChartAxis,
+    };
+  }
+
+  renderGraph() {
+    this.ganttPlotData = ganttSeriesMock;
+    this.scatterPlotData = scatterSeriesMock;
+    this.formSeries();
+    this.formChartOptions();
+  }
+
+  ngOnInit(): void {
+    this.renderGraph();
+  }
 }
