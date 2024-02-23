@@ -67,6 +67,7 @@ export class AppComponent implements OnInit {
         dateTimeLabelFormats: {
           week: '%e%b', // format to show the first date & its month on graph
         },
+        opposite: true,
         labels: {
           style: {
             color: '#454343', // Text color of the label
@@ -95,6 +96,8 @@ export class AppComponent implements OnInit {
     ],
     yAxis: {
       categories: [],
+      min: 0,
+      uniqueNames: true,
       staticScale: 65.5, // sets the row height of y-axis
       grid: {
         enabled: false,

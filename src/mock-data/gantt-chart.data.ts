@@ -15,8 +15,8 @@ export const ganttSeriesMock: any[] = [
     type: 'gantt',
     data: [
       {
-        start: Date.UTC(2023, 3, 20),
-        end: Date.UTC(2023, 3, 30),
+        start: Date.UTC(2023, 9, 2),
+        end: Date.UTC(2023, 9, 6),
         color: '#f4f5f7',
         y: 1,
       },
@@ -185,7 +185,7 @@ export const scatterSeriesMock: any[] = [
     },
     data: [
       {
-        x: Date.UTC(2023, 3, 23),
+        x: Date.UTC(2023, 9, 3),
         y: 1,
       },
     ],
@@ -198,7 +198,7 @@ export const scatterSeriesMock: any[] = [
     },
     data: [
       {
-        x: Date.UTC(2023, 3, 24),
+        x: Date.UTC(2023, 9, 4),
         y: 1,
       },
     ],
